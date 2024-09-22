@@ -1,16 +1,11 @@
 package com.aniket.top10.news.viewModel;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import com.aniket.top10.MyApplication;
 import com.aniket.top10.base.BaseViewModel;
 import com.aniket.top10.common.ApiCallBack;
 import com.aniket.top10.common.ApiResponse;
-import com.aniket.top10.dagger.components.DaggerViewModelComponent;
-import com.aniket.top10.dagger.components.ViewModelComponent;
 import com.aniket.top10.database.topNews.TopNewsEntity;
 import com.aniket.top10.news.repo.TopNewsRepo;
-
 import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
