@@ -36,14 +36,6 @@ public class TopNewsViewModel extends BaseViewModel {
                      }
 
                      @Override
-                     public void onFailure(int statusCode) {
-                         if (statusCode == 401)
-                             error.setValue("Invalid api-key");
-                         else
-                             error.setValue("please try again");
-                     }
-
-                     @Override
                      public void onError(String msg) {
                          error.setValue(msg);
                      }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,7 +66,8 @@ public class TopNewsAdapter extends RecyclerView.Adapter<TopNewsAdapter.ArticleA
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
+                            binding.imageHolder.setImageDrawable(AppCompatResources.getDrawable(context,R.drawable.baseline_broken_image_24));
+                            return true;
                         }
 
                         @Override

@@ -18,6 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:id="@+id/imageHolder"
+                android:src="@drawable/baseline_broken_image_24"
                 />
             <TextView
                 android:layout_width="match_parent"

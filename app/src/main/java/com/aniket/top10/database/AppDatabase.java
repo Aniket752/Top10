@@ -11,11 +11,17 @@ import com.aniket.top10.database.topNews.TopNewsEntity;
 
 @Database(entities = {TopNewsEntity.class},version = 1,exportSchema = false)
 abstract public class AppDatabase extends RoomDatabase {
+    private static volatile AppDatabase instance;
 
     abstract public TopNewsDao topNewsDto();
 
     synchronized public static AppDatabase getInstance(Context context){
-        return Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"Top10")
-                .build();
+        if (instance == null){
+           return Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"Top10")
+                    .build();
+        } else {
+            return instance;
+        }
+
     }
 }

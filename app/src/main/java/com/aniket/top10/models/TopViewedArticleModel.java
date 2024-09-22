@@ -21,7 +21,7 @@ public class TopViewedArticleModel {
         entity.title = title;
         if(!media.isEmpty()){
             if (!media.get(0).imageData.isEmpty()){
-                entity.media = media.get(0).imageData.get(0).url;
+                entity.media = media.get(0).imageData.get(media.get(0).imageData.size() - 1).url;
             }
         }
 
