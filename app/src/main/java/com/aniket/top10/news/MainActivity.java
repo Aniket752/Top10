@@ -11,17 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.aniket.top10.R;
-import com.aniket.top10.database.topNews.TopNewsEntity;
 import com.aniket.top10.databinding.ActivityMainBinding;
 import com.aniket.top10.news.adapter.TopNewsAdapter;
 import com.aniket.top10.news.viewModel.TopNewsViewModel;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements TopNewsAdapter.ArticleAdapterCallback {
 
@@ -43,14 +39,23 @@ public class MainActivity extends AppCompatActivity implements TopNewsAdapter.Ar
 
         viewModel.getTopArticles();
 
-        viewModel.topNewsList.observe(this, new Observer<List<TopNewsEntity>>() {
-            @Override
-            public void onChanged(List<TopNewsEntity> topNewsEntities) {
-                if(topNewsEntities != null){
-                    TopNewsAdapter adapter = new TopNewsAdapter(topNewsEntities,MainActivity.this::readArticle);
-                    binding.rvList.setAdapter(adapter);
-                    binding.rvList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                }
+        observeError();
+        observeArticleData();
+
+
+
+    }
+
+    public void observeError(){
+        viewModel.error.observe(this, s -> Toast.makeText(MainActivity.this,s,Toast.LENGTH_LONG).show());
+    }
+
+    public void observeArticleData(){
+        viewModel.topNewsList.observe(this, topNewsEntities -> {
+            if(topNewsEntities != null){
+                TopNewsAdapter adapter = new TopNewsAdapter(topNewsEntities,MainActivity.this);
+                binding.rvList.setAdapter(adapter);
+                binding.rvList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
             }
         });
     }

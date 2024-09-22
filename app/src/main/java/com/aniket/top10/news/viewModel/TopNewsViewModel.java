@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.aniket.top10.MyApplication;
 import com.aniket.top10.base.BaseViewModel;
+import com.aniket.top10.common.ApiCallBack;
+import com.aniket.top10.common.ApiResponse;
 import com.aniket.top10.dagger.components.DaggerViewModelComponent;
 import com.aniket.top10.dagger.components.ViewModelComponent;
 import com.aniket.top10.database.topNews.TopNewsEntity;
@@ -21,17 +23,40 @@ public class TopNewsViewModel extends BaseViewModel {
     TopNewsRepo topNewsRepo = new TopNewsRepo();
     public MutableLiveData<List<TopNewsEntity>> topNewsList = new MutableLiveData<>();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+    public MutableLiveData<String> error = new MutableLiveData<>();
 
     public TopNewsViewModel(){
         component.injectTopNewsViewModel(this);
     }
 
     public void getTopArticles(){
-         Disposable disposable = topNewsRepo.getArticleData()
+         Disposable disposable = topNewsRepo.getArticleData(new ApiCallBack<ApiResponse>() {
+                     @Override
+                     public void onSuccess(ApiResponse result) {
+                         if(!result.results.isEmpty()){
+                             topNewsRepo.insertArticleData(result.results);
+                         } else {
+                             error.setValue("Something went wrong");
+                         }
+                     }
+
+                     @Override
+                     public void onFailure(int statusCode) {
+                         if (statusCode == 401)
+                             error.setValue("Invalid api-key");
+                         else
+                             error.setValue("please try again");
+                     }
+
+                     @Override
+                     public void onError(String msg) {
+                         error.setValue(msg);
+                     }
+                 })
                  .subscribeOn(Schedulers.io())
                  .observeOn(AndroidSchedulers.mainThread())
                  .subscribe(topNewsEntities -> topNewsList.setValue(topNewsEntities),
-                         throwable -> System.out.println(throwable.getMessage()));
+                         throwable ->error.setValue(throwable.getMessage()));
          compositeDisposable.add(disposable);
     }
 

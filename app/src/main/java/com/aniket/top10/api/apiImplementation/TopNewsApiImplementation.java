@@ -1,13 +1,12 @@
 package com.aniket.top10.api.apiImplementation;
 
+import com.aniket.top10.BuildConfig;
 import com.aniket.top10.api.TopNewsApi;
 import com.aniket.top10.common.ApiCallBack;
 import com.aniket.top10.common.ApiResponse;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class TopNewsApiImplementation {
@@ -17,21 +16,14 @@ public class TopNewsApiImplementation {
     }
 
     public Disposable getTopNews(ApiCallBack<ApiResponse> callBack){
-        Single<ApiResponse> single = topNewsApi.getMostViewedArticles("3K5LWpB6jRfcSFsLGkttEsifFb0SxVK2")
+        Single<ApiResponse> single = topNewsApi.getMostViewedArticles(BuildConfig.api_key)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        return single.subscribe(new Consumer<ApiResponse>() {
-            @Override
-            public void accept(ApiResponse arrayListApiResponse) throws Exception {
-                callBack.onSuccess(arrayListApiResponse);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                System.out.println(throwable);
-//                callBack.onFailure(throwable.getMessage());
-            }
+        return single.subscribe(arrayListApiResponse ->
+                    callBack.onSuccess(arrayListApiResponse),
+                throwable -> {
+                    callBack.onError(throwable.getMessage());
         });
     }
 }

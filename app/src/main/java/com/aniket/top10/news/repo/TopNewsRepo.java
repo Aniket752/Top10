@@ -33,22 +33,8 @@ public class TopNewsRepo extends BaseRepo {
         component.injectTopNewsRepo(this);
     }
 
-    public void getTopArticles(){
-        Disposable disposable = topNewsApiImplementation.getTopNews(new ApiCallBack<ApiResponse>() {
-            @Override
-            public void onSuccess(ApiResponse result) {
-                if(!result.results.isEmpty()){
-                    insertArticleData(result.results);
-                } else {
-                    System.out.println("Something went wrong");
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode) {
-                System.out.println(statusCode);
-            }
-        });
+    public void getTopArticles(ApiCallBack<ApiResponse> callBack){
+        Disposable disposable = topNewsApiImplementation.getTopNews(callBack);
         compositeDisposable.add(disposable);
     }
 
@@ -71,8 +57,8 @@ public class TopNewsRepo extends BaseRepo {
                 .doOnComplete(() -> Log.d(TAG,"Deleted") ).subscribe();
     }
 
-    public Flowable<List<TopNewsEntity>> getArticleData(){
-        getTopArticles();
+    public Flowable<List<TopNewsEntity>> getArticleData(ApiCallBack<ApiResponse> callBack){
+        getTopArticles(callBack);
         return database.topNewsDto().getTopNews();
     }
 
